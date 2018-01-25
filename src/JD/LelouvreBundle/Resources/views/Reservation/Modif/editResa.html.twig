@@ -1,0 +1,77 @@
+{%  extends "JDLelouvreBundle::layout.html.twig" %}
+
+{% block title %}Réserver - {{ parent() }}{%  endblock %}
+
+{% block stylesheet %}
+    {{ parent() }}
+{% endblock %}
+
+{% block resaActive %}class="active"{% endblock %}
+
+{% block titleSection %}Réservez vos billets :{% endblock %}
+
+{% block body %}
+
+    {{ include('@JDLelouvre/Reservation/errorReser.html.twig') }}
+
+    <div class="row">
+
+        {{ form_start( form, {'attr': {'class': 'col-sm-6 col-sm-offset-3'}}) }}
+
+        {{ form_errors(form) }}
+
+        {{ include('@JDLelouvre/Reservation/billetsForm.html.twig') }}
+
+
+        <div class="form-group ">
+            <i class="glyphicon glyphicon-calendar"></i>
+            {{ form_label(form.dateresa, "Choisissez une date") }}
+            {{ form_errors(form.dateresa) }}
+            <div class="input-group date">
+                {{ form_widget(form.dateresa, {'attr': {'class': 'form-control datepicker','data-provide': 'datepicker' , 'data-date-format': 'dd/mm/yyyy',
+                    'data-date-days-of-week-disabled': '0,2', 'data-date-start-date': '0d', 'data-date-dates-disabled': '29/01/yyyy','data-date-dates-disabled': '25/01/yyyy' }}) }}
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.email, 'Votre adresse Email') }}
+            {{ form_errors(form.email) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.demijournee, "Choisissez le type de billets") }}
+            {{ form_errors(form.demijournee) }}
+            {{ form_widget(form.demijournee, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.nbBillets, 'Nombre de billets souhaité') }}
+            {{ form_errors(form.nbBillets) }}
+            {{ form_widget(form.nbBillets, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        {{ form_widget(form.Suivant, {'attr': {'class': 'btn btn-primary'}}) }}
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
+{% block javascript %}
+    {{ parent() }}
+    <!-- Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                value: format,
+                startDate: ('+ 0d'),
+                daysOfWeekDisabled: '0,2',
+                datesDisabled: ['01/01/yyyy', '25/01/yyyy']
+            });
+        });
+    </script>
+{% endblock %}

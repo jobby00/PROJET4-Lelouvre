@@ -1,0 +1,21 @@
+services:
+    jd_reservation.outilsreser:
+        class: JD\LelouvreBundle\Services\OutilsReser
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@jd_reservation.outilsbillets"
+            - '@templating'
+            - '@session'
+
+    jd_reservation.outilsbillets:
+        class: JD\LelouvreBundle\Services\OutilsBillets
+        arguments:
+              - "@doctrine.orm.entity_manager"
+
+
+    jd_payement.outilsStripe:
+        class: JD\LelouvreBundle\Services\OutilisStripe
+        arguments:
+            - 'stripe_secrete_key'
+            - "@jd_reservation.outilsreser"
+            - '@session'

@@ -1,0 +1,9 @@
+<div class="row resa-info">
+    {% for label, flashes in app.session.flashbag.all %}
+        <div class="bg-danger text-center text-danger col-sm-4 col-sm-offset-4 col-xs-8 col-xs-offset-2">
+            {% for flash in flashes %}
+                <p> {{ flash }} </p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

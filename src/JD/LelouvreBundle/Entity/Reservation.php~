@@ -1,0 +1,505 @@
+<?php
+
+namespace JD\LelouvreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use DateTime;
+
+/**
+ * Reservation
+ *
+ * @ORM\Table(name="reservation")
+ * @ORM\Entity(repositoryClass="JD\LelouvreBundle\Repository\ReservationRepository")
+ */
+class Reservation {
+      
+      /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=255)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 50,
+     *      minMessage = "Votre nom ne peut faire moins de {{ limit }} caractères.",
+     *      maxMessage = "Votre nom ne peut faire plus de {{ limit }} caractères."
+     * )
+     */
+    private $nom;
+
+    /**
+     * @var string
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 50,
+     *      minMessage = "Votre prénom ne peut faire moins de {{ limit }} caractères.",
+     *      maxMessage = "Votre prénom ne peut faire plus de {{ limit }} caractères."
+     * )
+     * @ORM\Column(name="prenom", type="string", length=255)
+     */
+    private $prenom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pays", type="string", length=2)
+     * @Assert\Country()
+     */
+    private $pays;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateNaissance", type="date")
+     * @Assert\Date()
+     * @Assert\LessThan(
+     *     "today",
+     *     message = "merci de vérifier la date de naissance"
+     * )
+     */
+    private $dateNaissance;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255)
+     * @Assert\Email()
+     */
+    private $email;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="datecreation", type="datetime")
+     * @Assert\DateTime()
+     * @Assert\GreaterThanOrEqual("today")
+     */
+    private $datecreation;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateresa", type="date")
+     * @Assert\DateTime()
+     * @Assert\GreaterThanOrEqual(
+     *      "today",
+     *      message = "merci ne pas choisir une date antérieure à celle du jour.."
+     * )
+     */
+    private $dateresa;
+
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="demijournee", type="boolean")
+     * @Assert\Type(type="boolean")
+     */
+    private $demijournee ;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="nb_billets", type="integer")
+     *
+     * @ASSERT\Range(
+     *     min = 1,
+     *     max = 20
+     * )
+     */
+    private $nbBillets = 1;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="prix", type="float")
+     */
+    private $prix;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="resa_code", type="string")
+     */
+    private $resaCode;
+
+    /**
+     * @ORM\OneToMany(targetEntity="JD\LelouvreBundle\Entity\Billets", mappedBy="reservation")
+     * @Assert\Valid
+     */
+    private $billets;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="tarifReduit", type="boolean")
+     */
+    private $tarifReduit = false;
+
+    /**
+     * @var int
+     * @ORM\Column(name="prixTotal", type="float")
+     */
+    private $prixTotal = 0;
+
+    /**
+     * A la création d'une nouvelle réservation,
+     * on crée son code,
+     * on prend la date du jour comme date de réservation par défaut
+     * et on enregistre le datetime de création de la réservation
+     * on met un champ d'email vide
+     *
+     * Reservation constructor.
+     */
+    public function __construct(){
+        $this->dateresa = new \DateTime();
+        $this->datecreation = new DateTime("now", new \DateTimeZone('Europe/Paris'));
+        //génération du code de réservation
+        //4 chiffre, 4 lettres
+        $str = "ABCDEFGHIJKLMNOPQRSTUVWYZ";
+        $str = str_split(str_shuffle($str), 4)[0];
+        $this->resaCode = rand(1000,9999).$str;
+        $this->email = '' ;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set datecreation
+     *
+     * @param \DateTime $datecreation
+     *
+     * @return Reservation
+     */
+    public function setDatecreation($datecreation)
+    {
+        $this->datecreation = $datecreation;
+
+        return $this;
+    }
+
+    /**
+     * Get datecreation
+     *
+     * @return \DateTime
+     */
+    public function getDatecreation()
+    {
+        return $this->datecreation;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Reservation
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set dateresa
+     *
+     * @param \DateTime $dateresa
+     *
+     * @return Reservation
+     */
+    public function setDateresa($dateresa)
+    {
+        $this->dateresa = $dateresa;
+
+        return $this;
+    }
+
+    /**
+     * Get dateresa
+     *
+     * @return \DateTime
+     */
+    public function getDateresa()
+    {
+        return $this->dateresa;
+    }
+
+    /**
+     * Set demijournee
+     *
+     * @param boolean $demijournee
+     *
+     * @return Reservation
+     */
+    public function setDemijournee($demijournee)
+    {
+        $this->demijournee = $demijournee;
+
+        return $this;
+    }
+
+    /**
+     * Get demijournee
+     *
+     * @return boolean
+     */
+    public function getDemijournee()
+    {
+        return $this->demijournee;
+    }
+
+    /**
+     * Set nbBillets
+     *
+     * @param integer $nbBillets
+     *
+     * @return Reservation
+     */
+    public function setNbBillets($nbBillets)
+    {
+        $this->nbBillets = $nbBillets;
+
+        return $this;
+    }
+
+    /**
+     * Get nbBillets
+     *
+     * @return integer
+     */
+    public function getNbBillets()
+    {
+        return $this->nbBillets;
+    }
+
+    /**
+     * Set resaCode
+     *
+     * @param string $resaCode
+     *
+     * @return Reservation
+     */
+    public function setResaCode($resaCode)
+    {
+        $this->resaCode = $resaCode;
+
+        return $this;
+    }
+
+    /**
+     * Get resaCode
+     *
+     * @return string
+     */
+    public function getResaCode()
+    {
+        return $this->resaCode;
+    }
+
+    /**
+     * Add billet
+     *
+     * @param \JD\LelouvreBundle\Entity\Billets $billet
+     *
+     * @return Reservation
+     */
+    public function addBillet(\JD\LelouvreBundle\Entity\Billets $billet)
+    {
+        $this->billets[] = $billet;
+
+        return $this;
+    }
+
+    /**
+     * Remove billet
+     *
+     * @param \JD\LelouvreBundle\Entity\Billets $billet
+     */
+    public function removeBillet(\JD\LelouvreBundle\Entity\Billets $billet)
+    {
+        $this->billets->removeElement($billet);
+    }
+
+    /**
+     * Get billets
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBillets()
+    {
+        return $this->billets;
+    }
+
+    /**
+     * Set nom
+     *
+     * @param string $nom
+     *
+     * @return Reservation
+     */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Get nom
+     *
+     * @return string
+     */
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    /**
+     * Set prenom
+     *
+     * @param string $prenom
+     *
+     * @return Reservation
+     */
+    public function setPrenom($prenom)
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    /**
+     * Get prenom
+     *
+     * @return string
+     */
+    public function getPrenom()
+    {
+        return $this->prenom;
+    }
+
+    /**
+     * Set pays
+     *
+     * @param string $pays
+     *
+     * @return Reservation
+     */
+    public function setPays($pays)
+    {
+        $this->pays = $pays;
+
+        return $this;
+    }
+
+    /**
+     * Get pays
+     *
+     * @return string
+     */
+    public function getPays()
+    {
+        return $this->pays;
+    }
+
+    /**
+     * Set dateNaissance
+     *
+     * @param \DateTime $dateNaissance
+     *
+     * @return Reservation
+     */
+    public function setDateNaissance($dateNaissance)
+    {
+        $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
+
+    /**
+     * Get dateNaissance
+     *
+     * @return \DateTime
+     */
+    public function getDateNaissance()
+    {
+        return $this->dateNaissance;
+    }
+
+    /**
+     * Set tarifReduit
+     *
+     * @param boolean $tarifReduit
+     *
+     * @return Reservation
+     */
+    public function setTarifReduit($tarifReduit)
+    {
+        $this->tarifReduit = $tarifReduit;
+
+        return $this;
+    }
+
+    /**
+     * Get tarifReduit
+     *
+     * @return boolean
+     */
+    public function getTarifReduit()
+    {
+        return $this->tarifReduit;
+    }
+
+    /**
+     * Set prix
+     *
+     * @param float $prix
+     *
+     * @return Reservation
+     */
+    public function setPrix($prix)
+    {
+        $this->prix = $prix;
+
+        return $this;
+    }
+
+    /**
+     * Get prix
+     *
+     * @return float
+     */
+    public function getPrix()
+    {
+        return $this->prix;
+    }
+}

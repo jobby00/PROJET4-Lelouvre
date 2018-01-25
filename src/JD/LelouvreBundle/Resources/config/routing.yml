@@ -1,0 +1,54 @@
+jd_reservation_index:
+    path: /
+    defaults:
+        { _controller: JDLelouvreBundle:Reservation:index, resaCode: null }
+
+jd_reservation_initialiser:
+    path: /inti-reservation/{resaCode}
+    defaults:
+        { _controller: JDLelouvreBundle:Reservation:initialiserReservation, resaCode: null }
+
+jd_reservation_completer:
+    path: /completer/{id}
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:completerReservation
+
+jd_reservation_panier:
+    path: /panier/{id}
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:panierReservation
+
+jd_reservation_delet:
+    path: /supprimer/{id}
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:delet
+
+jd_reservation_add:
+    path: /ajourter/{id}
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:add
+
+jd_reservation_modifier:
+    path: /modifier/{id}
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:modifier
+
+jd_reservation_modifreservation:
+    path: /modifier-reservation/{id}
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:modifieReservation
+
+order_checkout:
+    path: /checkout
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:checkoutReservation
+
+jd_reservation_facturation:
+    path: /facturation
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:facturationReservation
+
+jd_reservation_success:
+    path: /success
+    defaults:
+        _controller: JDLelouvreBundle:Reservation:success

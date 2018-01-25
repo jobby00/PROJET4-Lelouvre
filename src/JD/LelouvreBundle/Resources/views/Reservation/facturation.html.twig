@@ -1,0 +1,45 @@
+{%  extends "JDLelouvreBundle::layout.html.twig" %}
+
+{% block title %}Compléter réservation - {{ parent() }}{%  endblock %}
+
+{% block resaActive %}class="active"{% endblock %}
+
+{% block titleSection %}Paiement des billets :{% endblock %}
+
+{% block body %}
+    <div class="row resa-info">
+        <p class="bg-info text-info text-center  col-sm-4 col-sm-offset-4 col-xs-8 col-xs-offset-2">
+            Vous désirez {{ resa.nbBillets }} billet(s) {% if resa.demijournee %}demi-{% endif %}journée pour le {{ resa.dateresa|date("d/m/Y") }}
+        </p>
+    </div>
+
+    <div class="row">
+        <div id="recap-resa">
+
+            <h4>Les billets sont nominatifs et vont être réservés pour les personnes suivantes :</h4>
+
+            <ul id="liste-recap">
+                <li>
+                    {{resa.nom }}  {{ resa.prenom }}, né(e) le {{ resa.dateNaissance|date("d/m/Y") }},  prix de ce billet : {{ resa.prix }}
+                </li>
+                {% for billet in resa.billets %}
+                    <li>
+                        <p>
+                            {{ billet.nom }}  {{ billet.prenom }}, né(e) le {{ billet.dateNaissance|date("d/m/Y") }}, prix de ce billet :
+                            {% if resa.demijournee %} {{ billet.prix/2 }} {% else %} {{ billet.prix }} {% endif %}
+                            euros.
+                            {% if billet.tarifReduit %}
+                                <br><i>Vous devrez présenter votre justificatif tarif réduit à l'entrée.</i>
+                            {% endif %}
+                        </p>
+                    </li>
+                {% endfor %}
+            </ul>
+            <p><strong>Montant de total de la réservation : <br> {{ resa.prixTotal }} €</strong></p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+{% endblock %}

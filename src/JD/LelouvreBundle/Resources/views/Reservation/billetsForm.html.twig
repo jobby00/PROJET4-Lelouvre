@@ -1,0 +1,28 @@
+<div class="ticket-fill">
+    <div class="form-group">
+        {{ form_label(form.nom, 'Nom') }}
+        {{ form_errors(form.nom) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'id': 'nom', 'required': 'required'}}) }}
+        <span id="nomVide"></span>
+    </div>
+    <div class="form-group">
+        {{ form_label(form.prenom, 'Prenom') }}
+        {{ form_errors(form.prenom) }}
+        {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'id': 'prenom'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.pays, 'Pays') }}
+        {{ form_errors(form.pays) }}
+        {{ form_widget(form.pays, {'attr': {'class': 'form-control', 'id': 'pays'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.dateNaissance, 'Date de naissance') }}
+        {{ form_errors(form.dateNaissance) }}
+        {{ form_widget(form.dateNaissance, {'attr': {'class': 'form-control', 'id': 'dateNaissance'}}) }}
+    </div>
+    <div class="form-check">
+        {{ form_label(form.tarifReduit, 'Tarif reduit') }}
+        {{ form_errors(form.tarifReduit) }}
+        {{ form_widget(form.tarifReduit, {'attr': {'class': 'form-check-input', 'id': 'tarifReduit'}}) }}
+    </div>
+</div>

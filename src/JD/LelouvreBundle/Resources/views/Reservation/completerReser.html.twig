@@ -1,0 +1,104 @@
+{%  extends "JDLelouvreBundle::layout.html.twig" %}
+
+{% block title %}Compléter réservation - {{ parent() }}{%  endblock %}
+
+{% block resaActive %}class="active"{% endblock %}
+
+{% block titleSection %}Complétez vos billets :{% endblock %}
+
+{% block body %}
+    <div>
+        {{ include('@JDLelouvre/Reservation/errorReser.html.twig') }}
+    </div>
+    <table class="table table-striped  table-responsive">
+        <thead>
+        <tr>
+            <th>
+                Nom
+            </th>
+            <th>
+                Prénom
+            </th>
+            <th>
+                Pays
+            </th>
+            <th>
+                Date de naissance
+            </th>
+            <th>
+                Adresse email
+            </th>
+            <th>
+                Date de la visite
+            </th>
+            <th>
+                Tarif en HT
+            </th>
+            <th>
+                Prix en TTC
+            </th>
+            <th>
+
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for billetResa in billetResa %}
+            <tr>
+                <td> {{ billetResa.nom }} </td>
+                <td> {{ billetResa.prenom }} </td>
+                <td> {{ billetResa.pays }} </td>
+                <td> {{ billetResa.dateNaissance | date('d/m/Y') }} </td>
+                <td> {{ billetResa.email }} </td>
+                <td> {{ billetResa.dateresa | date('d/m/Y') }} </td>
+                <td> {{ billetResa.prix }} €</td>
+                <td> {{ (((19.6 * billetResa.prix)/100) + billetResa.prix)|number_format(2, ',',',') }} €</td>
+                <td>  </td>
+            </tr>
+            {% for billet in billetResa.billets %}
+                <tr>
+                    <td> {{ billet.nom }} </td>
+                    <td> {{ billet.prenom }} </td>
+                    <td> {{ billet.pays }} </td>
+                    <td> {{ billet.dateNaissance | date('d/m/Y') }} </td>
+                    <td>  </td>
+                    <td> {{ billetResa.dateresa | date('d/m/Y') }} </td>
+                    <td> {{ billet.prix }} €</td>
+                    <td> {{ (((19.6 * billet.prix)/100) + billet.prix)|number_format(2, ',',',') }} €</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <div>
+                <a href="{{ path('jd_reservation_delet',{'id': resa.id })}}" title="supprimer" >
+                    <i class="glyphicon glyphicon-trash"></i>
+                </a>
+                <a href="{{ path('jd_reservation_add',{'id': resa.id })}}" title="ajouter">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </a>
+        </div>
+
+        <p><h4>La somme total HT: {{ prixtotal }} €</h4></p>
+        <p><h4>La somme total TTC: {{ (((prixtotal * 19.6)) / 100 + prixtotal)|number_format(2, ',',',') }} €</h4></p>
+
+    <div class="row">
+
+        {{ form_start( form, {'attr': {'class': 'col-sm-6 col-sm-offset-3'}}) }}
+
+        {{ form_errors(form) }}
+
+        {{ include('@JDLelouvre/Reservation/billetsForm.html.twig') }}
+
+        {{ form_widget(form.Suivant, {'attr': {'class': 'btn btn-primary'}}) }}
+        {{ form_end(form) }}
+
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+{% endblock %}

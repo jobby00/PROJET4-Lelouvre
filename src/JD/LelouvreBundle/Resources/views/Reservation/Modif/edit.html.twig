@@ -1,0 +1,29 @@
+{%  extends "JDLelouvreBundle::layout.html.twig" %}
+
+{% block title %}Compléter réservation - {{ parent() }}{%  endblock %}
+
+{% block resaActive %}class="active"{% endblock %}
+
+{% block titleSection %}Complétez vos billets :{% endblock %}
+
+{% block body %}
+
+    {{ include('@JDLelouvre/Reservation/errorReser.html.twig') }}
+
+    <div class="row">
+
+        {{ form_start( form, {'attr': {'class': 'col-sm-6 col-sm-offset-3'}}) }}
+
+        {{ form_errors(form) }}
+
+        {{ include('@JDLelouvre/Reservation/billetsForm.html.twig') }}
+
+        {{ form_widget(form.Suivant, {'attr': {'class': 'btn btn-primary'}}) }}
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

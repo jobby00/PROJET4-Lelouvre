@@ -1,0 +1,140 @@
+{%  extends "JDLelouvreBundle::layout.html.twig" %}
+
+{% block title %}Compléter réservation - {{ parent() }}{%  endblock %}
+
+{% block resaActive %}class="active"{% endblock %}
+
+{% block titleSection %}Complétez vos billets :{% endblock %}
+
+{% block body %}
+    <div>
+        {{ include('@JDLelouvre/Reservation/errorReser.html.twig') }}
+    </div>
+    <table class="table table-striped  table-responsive">
+        <thead>
+        <tr>
+            <th>
+                Nom
+            </th>
+            <th>
+                Prénom
+            </th>
+            <th>
+                Pays
+            </th>
+            <th>
+                Date de naissance
+            </th>
+            <th>
+                Adresse email
+            </th>
+            <th>
+                Date de visite
+            </th>
+            <th>
+                Tarif HT
+            </th>
+            <th>
+                Prix  TTC
+            </th>
+            <th>
+                Modifié
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> {{ billetResa.nom }} </td>
+                <td> {{ billetResa.prenom }} </td>
+                <td> {{ billetResa.pays }} </td>
+                <td> {{ billetResa.dateNaissance | date('d/m/Y') }} </td>
+                <td> <spam class="email">{{ billetResa.email }}</spam> </td>
+                <td> {{ billetResa.dateresa | date('d/m/Y') }} </td>
+                <td> {{ billetResa.prix }} €</td>
+                <td> {{ (((19.6 * billetResa.prix)/100) + billetResa.prix)|number_format(2, ',',',') }} €</td>
+                <td>
+                    <a href="{{ path('jd_reservation_modifreservation', {'id': billetResa.id}) }}" title="Modifier" >
+                        <i class="glyphicon glyphicon-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+            {% for billet in billetResa.billets %}
+                <tr>
+                    <td> {{ billet.nom }} </td>
+                    <td> {{ billet.prenom }} </td>
+                    <td> {{ billet.pays }} </td>
+                    <td> {{ billet.dateNaissance | date('d/m/Y') }} </td>
+                    <td>  </td>
+                    <td> {{ billetResa.dateresa | date('d/m/Y') }} </td>
+                    <td> {{ billet.prix }} €</td>
+                    <td> {{ (((19.6 * billet.prix)/100) + billet.prix )|number_format(2, ',',',')}} €</td>
+                    <td>
+                        <a href="{{ path('jd_reservation_modifier', {'id': billet.id}) }}" title="Modifier" >
+                            <i class="glyphicon glyphicon-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><h4>La somme total HT: {{ prixtotal }} €</h4></p>
+    <p><h4>La somme total TTC: <spam class="price-totale">{{ (((prixtotal * 19.6)) / 100 + prixtotal)|number_format(2, ',',',')}}</spam> €</h4></p>
+    <form action="{{ path('jd_reservation_success') }}" method="POST">
+        <script
+                src="https://checkout.stripe.com/checkout.js"
+                class="stripe-button"
+                data-key="pk_test_yJVvuJlc5zGFsqwN5J402GTE"
+                data-amount="{{ (((prixtotal * 19.6)) / 100 + prixtotal) * 100 }}"
+                data-name="{{ billetResa.nom }} {{ billetResa.prenom }}"
+                data-description="Vous recevrez vos {{ billetResa.nbBillets }} billets par email"
+                data-image = "https://stripe.com/img/documentation/checkout/marketplace.png"
+                data-email = "{{ billetResa.email }}"
+                data-locale="auto"
+                data-currency="eur"
+        >
+        </script>
+        <button class="btn btn-primary">Payez par carte bancaire</button>
+    </form>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <!--
+    <script src="https://js.stripe.com/v3/"></script>
+    -->
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    <script>
+        var prixTotale = $('.price-totale').html();
+        var adressEmail = $('.email').html();
+        $(document).ready(function() {
+            var handler = StripeCheckout.configure({
+                key: 'pk_test_yJVvuJlc5zGFsqwN5J402GTE',
+                image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+                locale: 'auto',
+                token: function(token)
+                {
+                    // You can access the token ID with `token.id`. // Get the token ID to your server-side code for use.
+                    $('.formPart form').submit();
+                }
+            });
+            $('.stripe-button').click(function(e)
+            { e.preventDefault(); // Open Checkout with further options:
+                handler.open({
+                    name: 'Musée du Louvre',
+                    description: 'Billeterie',
+                    zipCode: true,
+                    amount: prixTotale*100,
+                    email: adressEmail,
+                    billingAddress: true,
+                    currency: 'EUR',
+                    allowRememberMe: true });
+            });
+            window.addEventListener('popstate', function() { handler.close(); });
+        });
+        $('.stripe-button-el').addClass('hidden');
+
+        $('.stripe-carte').click(function(){
+            $('.stripe-button-el').click();
+        });
+    </script>
+{% endblock %}
